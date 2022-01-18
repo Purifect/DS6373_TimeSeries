@@ -1,0 +1,32 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r setup}
+
+library(tswge)
+library(ggplot2)
+
+```
+
+```{r}
+ggsplitacf <-function(vec) {
+  h1 <- vec[1:(length(vec)/2)]
+  h2 <- vec[(length(vec)/2):length(vec)]
+  first <- acf(vec)+ggthemes::theme_few()
+  second <- acf(h1)+ggthemes::theme_few()
+  third <- acf(h2)+ggthemes::theme_few()
+  cowplot::plot_grid(first, second, third,
+                     labels = c("original", 
+                                "first half",
+                                "second half"),
+                     nrow = 2, align = "v")
+}
+```
+
+```{r}
+data("whale")
+plot(whale) + ggthemes::theme_few()
+ggsplitacf(whale)
+```

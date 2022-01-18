@@ -1,0 +1,86 @@
+---
+title: "Untitled"
+author: "Puri"
+date: "1/17/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(tswge)
+library(dplyr)
+```
+
+```{r}
+# Example from Asynchronous
+data("fig1.21a")
+plotts.wge(fig1.21a)
+
+## Low Pass Filter (5 point Moving Average)
+ma = stats::filter(fig1.21a, rep(1,5))/5
+plot(ma, type = 'l')
+
+## High Pass Filter (Difference Filter)
+dif = diff(fig1.21a, lag = 1)
+plot(dif, type = 'l')
+```
+
+````{r}
+# Walmart dataset
+wm <- read.csv('/Users/puri/DataScience@SMU/08.DS6373 TIme Series/Markdown Files/walmart.csv')
+
+# Walmart Store#8, Item#50
+wm8_50 <- wm %>% filter(store == 8, item == 50)
+head(wm8_50)
+
+plotts.wge(wm8_50$sales)
+
+2*sqrt(nrow(wm8_50)) 
+parzen.wge(wm8_50$sales, trunc = 85)  # common M = 85
+
+## Low Pass Filter (5 point Moving Average)
+ma05 = stats::filter(wm8_50$sales, rep(1,5))/5
+plot(ma05, type = 'l')
+
+# Spectral Density
+
+2*sqrt(length(na.omit(ma05)))  # common M = 85
+parzen.wge(na.omit(ma05), trunc = 85)
+
+## Low Pass Filter (51 point Moving Average)
+ma51 = stats::filter(wm8_50$sales, rep(1,51))/51
+plot(ma51, type = 'l')
+
+2*sqrt(length(na.omit(ma51))) # common M = 84
+parzen.wge(na.omit(ma51), trunc = 84)
+```
+
+```{r}
+
+# Walmart Store#8, Item#50
+wm7_27 <- wm %>% filter(store == 7, item == 27)
+head(wm7_27)
+
+plotts.wge(wm7_27$sales)
+
+2*sqrt(nrow(wm7_27))
+parzen.wge(wm7_27$sales, trunc = 85)  # common M = 85
+
+## Low Pass Filter (5 point Moving Average)
+ma05_7_27 = stats::filter(wm7_27$sales, rep(1,5))/5
+plot(ma05_7_27, type = 'l')
+
+# Spectral Density
+
+2*sqrt(length(na.omit(ma05_7_27)))  # common M = 85
+parzen.wge(na.omit(ma05_7_27), trunc = 85)
+
+## Low Pass Filter (51 point Moving Average)
+ma51_7_27 = stats::filter(wm7_27$sales, rep(1,51))/51
+plot(ma51_7_27, type = 'l')
+
+2*sqrt(length(na.omit(ma51_7_27))) # common M = 84
+parzen.wge(na.omit(ma51_7_27), trunc = 84)
+```
